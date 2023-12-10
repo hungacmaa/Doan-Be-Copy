@@ -1,4 +1,4 @@
-USE trading_zone;
+USE trading_zone_1;
 SET NAMES 'utf8';
 
 INSERT
@@ -8,7 +8,8 @@ VALUES (1, 'ROLE_USER'), (2, 'ROLE_ADMIN');
 INSERT
 IGNORE INTO account (id, name, username, password, phone, avatar, role_id, status, latitude, longitude)
 VALUES (1, 'Nguyen Van A', 'admin', '123456', '0999888777', 'https://genzrelax.com/wp-content/uploads/2022/03/anh-dai-dien-dep-4.jpg', 2, 'Đang hoạt động', '0', '0'),
- (2, 'Jack 5tr', 'user1', '123456', '0999888777', 'https://firebasestorage.googleapis.com/v0/b/fir-15eec.appspot.com/o/images%2Favatar-nhom-4-nguoi-26.jpg153f3a27-9d95-4194-9416-7642e6797aa0?alt=media&token=b46492af-4fda-4ac5-a08a-1935a45116cf', 1, 'Đang hoạt động', '0', '0');
+(2, 'Jack 5tr', 'user1', '123456', '0999888777', 'https://firebasestorage.googleapis.com/v0/b/fir-15eec.appspot.com/o/images%2Favatar-nhom-4-nguoi-26.jpg153f3a27-9d95-4194-9416-7642e6797aa0?alt=media&token=b46492af-4fda-4ac5-a08a-1935a45116cf', 1, 'Đang hoạt động', '0', '0'),
+(3, 'Predict System', 'predictsystem', '123456', NULL, NULL, 2, 'Đang hoạt động', '0', '0');
 
 INSERT
 IGNORE INTO category_product (id, name)
