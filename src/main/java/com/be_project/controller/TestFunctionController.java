@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 
@@ -26,7 +27,8 @@ public class TestFunctionController {
     public ResponseEntity<?> helloFlask() {
         try {
 
-
+            WebClient.Builder wcBuilder = WebClient.builder();
+            wcBuilder.build().po
 
             RestTemplate restTemplate = new RestTemplate();
             String s = restTemplate.getForObject("http://localhost:5000/hello", String.class);
