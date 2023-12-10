@@ -1,6 +1,8 @@
 package com.be_project.controller;
 
 import com.be_project.entity.dto.ListURLDto;
+import com.be_project.service.impl.MyAsyncService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,10 +16,14 @@ import java.util.List;
 @RequestMapping("/api/test")
 public class TestFunctionController {
 
+    @Autowired
+    private MyAsyncService myAsyncService;
+
     @GetMapping("/hello")
     public ResponseEntity<?> helloWorld() {
         try {
-            return ResponseEntity.ok("hello");
+            myAsyncService.performAsyncTask();
+            return ResponseEntity.ok("Async task triggered!");
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
@@ -26,9 +32,6 @@ public class TestFunctionController {
     @GetMapping("/helloFlask")
     public ResponseEntity<?> helloFlask() {
         try {
-
-            WebClient.Builder wcBuilder = WebClient.builder();
-            wcBuilder.build().po
 
             RestTemplate restTemplate = new RestTemplate();
             String s = restTemplate.getForObject("http://localhost:5000/hello", String.class);
