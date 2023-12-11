@@ -63,6 +63,7 @@ public class PostService implements IPostService {
     @Override
     public Post createPost(PostDto postDto) {
         Post post = new Post(postDto);
+        post.setStatus("Chờ kiểm duyệt");
         Post postDB = postRepo.save(post);
         List<Image> imageList = postDto.getImages();
         for (Image image : postDto.getImages()) {

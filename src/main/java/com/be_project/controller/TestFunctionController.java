@@ -1,6 +1,7 @@
 package com.be_project.controller;
 
 import com.be_project.entity.dto.ListURLDto;
+import com.be_project.entity.dto.PostDto;
 import com.be_project.service.impl.MyAsyncService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,9 +23,11 @@ public class TestFunctionController {
     @GetMapping("/hello")
     public ResponseEntity<?> helloWorld() {
         try {
+            System.out.println("1");
             myAsyncService.performAsyncTask();
+            System.out.println("2");
             return ResponseEntity.ok("Async task triggered!");
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
@@ -35,21 +38,35 @@ public class TestFunctionController {
 
             RestTemplate restTemplate = new RestTemplate();
             String s = restTemplate.getForObject("http://localhost:5000/hello", String.class);
-
+//            System.out.println(s);
             System.out.println("hehe");
 
             return ResponseEntity.ok(s);
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
     @PostMapping("/predict")
-    public ResponseEntity<?> predict(@RequestBody ListURLDto requestBody) {
+    public ResponseEntity<?> predict(@RequestBody ListURLDto listURLDto) {
         try {
-            return ResponseEntity.ok(requestBody);
-        } catch (Exception e){
+            // call api
+            myAsyncService.fetchPredictData(listURLDto);
+            System.out.println("hehe");
+            // return result
+            return ResponseEntity.ok(listURLDto);
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+
+//    @PostMapping("/create-post")
+//    public ResponseEntity<?> createPost(@RequestBody PostDto postDto) {
+//        try {
+//            return ResponseEntity.ok("created post");
+//        } catch (Exception e) {
+//            ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+//        }
+//    }
+
 }

@@ -1,7 +1,10 @@
 package com.be_project.controller;
 
 import com.be_project.entity.Account;
+import com.be_project.entity.Image;
+import com.be_project.entity.Post;
 import com.be_project.entity.dto.FilterDto;
+import com.be_project.entity.dto.ListURLDto;
 import com.be_project.entity.dto.PostDto;
 import com.be_project.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 
 @RestController
@@ -24,6 +28,8 @@ public class AccountController {
     private IExchangeService exchangeService;
     @Autowired
     private IPostPinService postPinService;
+    @Autowired
+    private ICensorService censorService;
 
 
     @GetMapping("/{accountId}")
@@ -114,9 +120,20 @@ public class AccountController {
 
     @PostMapping("/posts")
     public ResponseEntity<?> createPost(@RequestBody PostDto postDto) {
+
         try {
-            return ResponseEntity.ok(postService.createPost(postDto));
+            Post post = postService.createPost(postDto);
+            ListURLDto listURLDto = new ListURLDto(new ArrayList<String>());
+            listURLDto.getImg_urls().add(postDto.getAvatar());
+            for(Image image:postDto.getImages()){
+                listURLDto.getImg_urls().add(image.getUrl());
+            }
+            // chạy bất đồng bộ tạo lượt kiểm duyệt
+            censorService.createCensor(post, listURLDto);
+
+            return ResponseEntity.ok(post);
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
