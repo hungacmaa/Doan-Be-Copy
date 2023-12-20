@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Data
@@ -15,8 +16,10 @@ public class Report {
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY)
     private long id;
-    @Lob
-    private String content;
+    @Column(columnDefinition = "TEXT")
+    private String reason;
+    private String status = "Chờ phê duyệt";
+    private LocalDate createdAt = LocalDate.now();
     @ManyToOne
     private Account account;
     @ManyToOne

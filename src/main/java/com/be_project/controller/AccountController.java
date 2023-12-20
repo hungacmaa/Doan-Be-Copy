@@ -3,6 +3,7 @@ package com.be_project.controller;
 import com.be_project.entity.Account;
 import com.be_project.entity.Image;
 import com.be_project.entity.Post;
+import com.be_project.entity.Report;
 import com.be_project.entity.dto.FilterDto;
 import com.be_project.entity.dto.ListURLDto;
 import com.be_project.entity.dto.PostDto;
@@ -30,6 +31,8 @@ public class AccountController {
     private IPostPinService postPinService;
     @Autowired
     private ICensorService censorService;
+    @Autowired
+    private IReportService reportService;
 
 
     @GetMapping("/{accountId}")
@@ -159,6 +162,36 @@ public class AccountController {
     public ResponseEntity<?> searchAroundHere(@RequestBody Account account) {
         try {
             return ResponseEntity.ok(accountService.getAccountsAroundHere(account));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/report-post")
+    public ResponseEntity<?> reportPost(@RequestBody Report report) {
+        try {
+            return ResponseEntity.ok(reportService.saveReport(report));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/report-post/{accountId}")
+    public ResponseEntity<?> getAllReportsByAccountId(@RequestBody FilterDto filterDto,
+                                                      @PathVariable long accountId,
+                                                      @RequestParam(name = "page", defaultValue = "0") int page,
+                                                      @RequestParam(name = "size", defaultValue = "10") int size) {
+        try {
+            return ResponseEntity.ok(reportService.getAllReportsByAccountId(accountId, filterDto, page, size));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/report-post/{postId}")
+    public ResponseEntity<?> getAllReportsByAccountId(@PathVariable long postId) {
+        try {
+            return ResponseEntity.ok(reportService.getReportByPostId(postId));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }

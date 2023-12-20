@@ -1,9 +1,11 @@
 package com.be_project.service.impl;
 
+import com.be_project.entity.Censor;
 import com.be_project.entity.Image;
 import com.be_project.entity.Post;
 import com.be_project.entity.dto.FilterDto;
 import com.be_project.entity.dto.PostDto;
+import com.be_project.repository.ICensorRepo;
 import com.be_project.repository.IImageRepo;
 import com.be_project.repository.IPostRepo;
 import com.be_project.service.IPostService;
@@ -23,6 +25,8 @@ public class PostService implements IPostService {
     private IPostRepo postRepo;
     @Autowired
     private IImageRepo imageRepo;
+    @Autowired
+    private ICensorRepo censorRepo;
 
     @Override
     public Page<Post> getAll(FilterDto filterDto, int page, int size) {
@@ -84,6 +88,11 @@ public class PostService implements IPostService {
 
     @Override
     public Boolean deletePost(long postId) {
+        List<Image> images = imageRepo.findAllByPostId(postId);
+        imageRepo.deleteAll(images);
+
+        List<Censor> cencors = censorRepo.findAllByPostId(postId);
+        censorRepo.deleteAll(cencors);
         return postRepo.deleteById(postId);
     }
 }
