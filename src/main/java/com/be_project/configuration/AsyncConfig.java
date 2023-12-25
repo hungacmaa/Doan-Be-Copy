@@ -26,10 +26,10 @@ public class AsyncConfig {
         return WebClient.builder();
     }
 
-    @Bean
-    public ObjectMapper getObjectMapper(){
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        return objectMapper;
-    }
+//    @Bean
+//    public ObjectMapper getObjectMapper(){
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        objectMapper.registerModule(new JavaTimeModule());
+//        return objectMapper;
+//    }
 }
