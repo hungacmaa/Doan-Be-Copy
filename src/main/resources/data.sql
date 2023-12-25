@@ -13,7 +13,7 @@ VALUES (1, 'Nguyen Van A', 'admin', '123456', '0999888777', 'https://genzrelax.c
 
 INSERT
 IGNORE INTO category_product (id, name)
-VALUES (1, 'Quần'), (2, 'Áo'), (3, 'Giày dép'), (4, 'Phụ kiện'), (5, 'Khác');
+VALUES (1, 'Quần'), (2, 'Áo'), (3, 'Giày'), (4, 'Phụ kiện'), (5, 'Khác');
 
 # INSERT IGNORE INTO post (id, title, category_post, category_product_id, description, requirement, address, avatar, created_at, status, account_id,
 #                    count_view)
