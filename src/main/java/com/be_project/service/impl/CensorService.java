@@ -47,7 +47,7 @@ public class CensorService implements ICensorService {
                 .createdAt(post.getCreatedAt())
                 .status("Chờ kiểm duyệt")
                 .build();
-
+        censorRepo.save(censor);
         // lấy list images
         try {
 

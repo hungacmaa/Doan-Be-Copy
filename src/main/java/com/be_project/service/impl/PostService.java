@@ -1,5 +1,6 @@
 package com.be_project.service.impl;
 
+import com.be_project.entity.CategoryProduct;
 import com.be_project.entity.Censor;
 import com.be_project.entity.Image;
 import com.be_project.entity.Post;
@@ -94,5 +95,10 @@ public class PostService implements IPostService {
         List<Censor> cencors = censorRepo.findAllByPostId(postId);
         censorRepo.deleteAll(cencors);
         return postRepo.deleteById(postId);
+    }
+
+    @Override
+    public List<Post> getAllByCategoryProduct(CategoryProduct categoryProduct) {
+        return postRepo.findAllByCategoryProduct(categoryProduct);
     }
 }

@@ -1,5 +1,6 @@
 package com.be_project.repository;
 
+import com.be_project.entity.CategoryProduct;
 import com.be_project.entity.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.List;
 
 public interface IPostRepo extends JpaRepository<Post, Long> {
     @Query("SELECT p FROM Post p WHERE p.status LIKE CONCAT('%', :status, '%') " +
@@ -50,4 +52,6 @@ public interface IPostRepo extends JpaRepository<Post, Long> {
                                      @Param("status") String status);
 
     Boolean deleteById(long postId);
+
+    List<Post> findAllByCategoryProduct(CategoryProduct categoryProduct);
 }

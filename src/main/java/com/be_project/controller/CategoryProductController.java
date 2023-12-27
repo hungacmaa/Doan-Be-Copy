@@ -22,19 +22,31 @@ public class CategoryProductController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+
     @PostMapping
-    public ResponseEntity<?> createProductCategory(@RequestBody CategoryProduct categoryProduct){
-        try{
+    public ResponseEntity<?> createProductCategory(@RequestBody CategoryProduct categoryProduct) {
+        try {
             return ResponseEntity.ok(categoryProductService.createProductCategory(categoryProduct));
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+
     @PutMapping("/{productCategoryId}")
-    public ResponseEntity<?> editProductCategory(@RequestBody CategoryProduct categoryProduct, @PathVariable long productCategoryId){
+    public ResponseEntity<?> editProductCategory(@RequestBody CategoryProduct categoryProduct, @PathVariable long productCategoryId) {
         try {
 
             return ResponseEntity.ok(categoryProductService.editProductCategory(productCategoryId, categoryProduct));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{productCategoryId}")
+    public ResponseEntity<?> deleteProductCategory(@PathVariable long productCategoryId) {
+        try {
+            categoryProductService.deleteProductCategory(productCategoryId);
+            return ResponseEntity.ok("Success");
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }

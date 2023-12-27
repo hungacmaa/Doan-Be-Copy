@@ -9,4 +9,6 @@ public interface ICategoryProductService {
     CategoryProduct createProductCategory(CategoryProduct categoryProduct);
 
     CategoryProduct editProductCategory(long productCategoryId, CategoryProduct categoryProduct);
+
+    void deleteProductCategory(long productCategoryId);
 }
