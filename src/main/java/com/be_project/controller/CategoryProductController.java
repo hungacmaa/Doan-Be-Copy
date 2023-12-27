@@ -1,6 +1,7 @@
 package com.be_project.controller;
 
 import com.be_project.entity.Account;
+import com.be_project.entity.CategoryProduct;
 import com.be_project.service.ICategoryProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,14 @@ public class CategoryProductController {
         try {
             return ResponseEntity.ok(categoryProductService.getAll());
         } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+    @PostMapping
+    public ResponseEntity<?> createProductCategory(@RequestBody CategoryProduct categoryProduct){
+        try{
+            return ResponseEntity.ok(categoryProductService.createProductCategory(categoryProduct));
+        } catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }

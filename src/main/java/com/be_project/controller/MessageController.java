@@ -2,10 +2,15 @@ package com.be_project.controller;
 
 import com.be_project.entity.Message;
 import com.be_project.service.IMessageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 
 @RestController
@@ -27,6 +32,12 @@ public class MessageController {
     @PostMapping
     public ResponseEntity<?> saveMessage(@RequestBody Message message) {
         try {
+            // Đặt múi giờ cho Việt Nam
+            ZoneId vietnamZone = ZoneId.of("Asia/Ho_Chi_Minh");
+
+            // Đặt thời gian theo Viet Nam
+            message.setCreatedAt(LocalDateTime.now(vietnamZone));
+
             return ResponseEntity.ok(messageService.save(message));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

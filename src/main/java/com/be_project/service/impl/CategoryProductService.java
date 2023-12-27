@@ -16,4 +16,9 @@ public class CategoryProductService implements ICategoryProductService {
     public List<CategoryProduct> getAll() {
         return categoryProductRepo.findAll();
     }
+
+    @Override
+    public CategoryProduct createProductCategory(CategoryProduct categoryProduct) {
+        return categoryProductRepo.save(categoryProduct);
+    }
 }
