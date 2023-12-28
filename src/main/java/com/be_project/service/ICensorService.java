@@ -14,4 +14,6 @@ public interface ICensorService {
     Boolean deleteCensor(Censor censor);
 
     Censor acceptCensor(long censorId, CensorDto censorDto);
+
+    Censor rejectCensor(long censorId, CensorDto censorDto);
 }

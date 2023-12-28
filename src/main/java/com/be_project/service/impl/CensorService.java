@@ -150,7 +150,7 @@ public class CensorService implements ICensorService {
         if(data.isPresent()){
             Censor censor = data.get();
             if(censor.getStatus().equals("Chờ kiểm duyệt")){
-                censor.setReason(censorDto.getReason());
+                censor.setReason("Thỏa mãn");
                 censor.setResult("Duyệt");
                 censor.setStatus("Đã kiểm duyệt");
                 ZoneId vietnamZone = ZoneId.of("Asia/Ho_Chi_Minh");
@@ -159,6 +159,34 @@ public class CensorService implements ICensorService {
 
                 Post post = censor.getPost();
                 post.setStatus("Chưa trao đổi");
+                postRepo.save(post);
+
+                censor = censorRepo.save(censor);
+
+                return censor;
+            }
+            else{
+                return censor;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Censor rejectCensor(long censorId, CensorDto censorDto) {
+        Optional<Censor> data = censorRepo.findById(censorId);
+        if(data.isPresent()){
+            Censor censor = data.get();
+            if(censor.getStatus().equals("Chờ kiểm duyệt")){
+                censor.setReason(censorDto.getReason());
+                censor.setResult("Khóa");
+                censor.setStatus("Đã kiểm duyệt");
+                ZoneId vietnamZone = ZoneId.of("Asia/Ho_Chi_Minh");
+                censor.setModifiedAt(LocalDate.now(vietnamZone));
+                censor.setReviewer(censorDto.getAccount());
+
+                Post post = censor.getPost();
+                post.setStatus("Khóa");
                 postRepo.save(post);
 
                 censor = censorRepo.save(censor);

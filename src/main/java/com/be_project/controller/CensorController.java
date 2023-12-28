@@ -36,8 +36,16 @@ public class CensorController {
     @PutMapping("/accept/{censorId}")
     public ResponseEntity<?> acceptCensor(@RequestBody CensorDto censorDto, @PathVariable long censorId){
         try {
-            System.out.println(censorDto.getAccount().getId());
             return ResponseEntity.ok(censorService.acceptCensor(censorId, censorDto));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/reject/{censorId}")
+    public ResponseEntity<?> rejectCensor(@RequestBody CensorDto censorDto, @PathVariable long censorId){
+        try {
+            return ResponseEntity.ok(censorService.rejectCensor(censorId, censorDto));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
