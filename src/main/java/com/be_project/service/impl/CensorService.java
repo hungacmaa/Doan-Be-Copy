@@ -19,6 +19,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -139,6 +141,34 @@ public class CensorService implements ICensorService {
 
     @Override
     public Boolean deleteCensor(Censor censor) {
+        return null;
+    }
+
+    @Override
+    public Censor acceptCensor(long censorId, CensorDto censorDto) {
+        Optional<Censor> data = censorRepo.findById(censorId);
+        if(data.isPresent()){
+            Censor censor = data.get();
+            if(censor.getStatus().equals("Chờ kiểm duyệt")){
+                censor.setReason(censorDto.getReason());
+                censor.setResult("Duyệt");
+                censor.setStatus("Đã kiểm duyệt");
+                ZoneId vietnamZone = ZoneId.of("Asia/Ho_Chi_Minh");
+                censor.setModifiedAt(LocalDate.now(vietnamZone));
+                censor.setReviewer(censorDto.getAccount());
+
+                Post post = censor.getPost();
+                post.setStatus("Chưa trao đổi");
+                postRepo.save(post);
+
+                censor = censorRepo.save(censor);
+
+                return censor;
+            }
+            else{
+                return censor;
+            }
+        }
         return null;
     }
 }

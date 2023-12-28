@@ -12,4 +12,6 @@ public interface ICensorService {
     void createCensor(Post post, ListURLDto listURLDto);
     Censor editCensor(CensorDto censorDto, long censorId);
     Boolean deleteCensor(Censor censor);
+
+    Censor acceptCensor(long censorId, CensorDto censorDto);
 }
