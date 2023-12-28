@@ -199,4 +199,9 @@ public class CensorService implements ICensorService {
         }
         return null;
     }
+
+    @Override
+    public Censor getCensorById(long censorId) {
+        return censorRepo.findById(censorId).get();
+    }
 }

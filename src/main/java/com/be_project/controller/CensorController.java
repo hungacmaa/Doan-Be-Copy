@@ -24,6 +24,15 @@ public class CensorController {
         }
     }
 
+    @GetMapping("/{censorId}")
+    public ResponseEntity<?> getCensor(@PathVariable long censorId) {
+        try {
+            return ResponseEntity.ok(censorService.getCensorById(censorId));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
     @PostMapping
     public ResponseEntity<?> createCensor(@RequestBody CensorDto censorDto){
         try {

@@ -16,4 +16,6 @@ public interface ICensorService {
     Censor acceptCensor(long censorId, CensorDto censorDto);
 
     Censor rejectCensor(long censorId, CensorDto censorDto);
+
+    Censor getCensorById(long censorId);
 }
