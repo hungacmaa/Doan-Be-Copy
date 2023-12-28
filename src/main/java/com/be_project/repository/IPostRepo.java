@@ -19,7 +19,8 @@ public interface IPostRepo extends JpaRepository<Post, Long> {
             "AND p.title LIKE CONCAT('%', :title, '%') " +
             "AND p.categoryPost LIKE CONCAT('%', :categoryPost, '%') " +
             "AND p.categoryProduct.name LIKE CONCAT('%', :categoryProductName, '%') " +
-            "AND p.createdAt BETWEEN :startDate AND :endDate")
+            "AND p.createdAt BETWEEN :startDate AND :endDate " +
+            "ORDER BY p.id DESC")
     Page<Post> getAll(@Param("status") String status,
                       @Param("username") String username,
                       @Param("title") String title,
@@ -34,7 +35,8 @@ public interface IPostRepo extends JpaRepository<Post, Long> {
             "AND p.categoryProduct.name LIKE CONCAT('%', :categoryProductName, '%') " +
             "AND p.status LIKE CONCAT('%', :status, '%')" +
             "AND p.title LIKE CONCAT('%', :title, '%') " +
-            "AND p.createdAt BETWEEN :startDate AND :endDate")
+            "AND p.createdAt BETWEEN :startDate AND :endDate " +
+            "ORDER BY p.id DESC")
     Page<Post> findAllByAccountId(@Param("accountId") Long accountId,
                                   @Param("categoryPost") String categoryPost,
                                   @Param("categoryProductName") String categoryProductName,
