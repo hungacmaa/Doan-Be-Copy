@@ -13,6 +13,7 @@ import com.be_project.repository.IPostRepo;
 import com.be_project.service.ICensorService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -38,7 +39,7 @@ public class CensorService implements ICensorService {
 
     @Override
     public List<Censor> getAll() {
-        return censorRepo.findAll();
+        return censorRepo.findAll(Sort.by(Sort.Direction.DESC, "id"));
     }
 
     @Override
@@ -50,9 +51,10 @@ public class CensorService implements ICensorService {
                 .status("Chờ kiểm duyệt")
                 .build();
         censorRepo.save(censor);
+        String categoryProduct = post.getCategoryProduct().getName();
+        if(categoryProduct.contains("Quần") || categoryProduct.contains("Áo"));
         // lấy list images
         try {
-
             // call api
             PredictResponse predictResponse = webClientBuilder.build()
                     .post()

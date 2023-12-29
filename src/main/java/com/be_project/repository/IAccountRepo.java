@@ -27,4 +27,13 @@ public interface IAccountRepo extends JpaRepository<Account, Long> {
     List<Account> findAllByUsernameContainsAndNotAccountLogin(@Param("username") String username, @Param("accountId") long accountId);
     @Query(nativeQuery = true, value = "SELECT * FROM account where username= :username and password= :password")
     Account getAccountLogin(@Param("username") String username, @Param("password") String password);
+
+    @Query("SELECT COUNT(a) FROM Account a WHERE a.role.id != 1" )
+    long countAdmin();
+
+    @Query("SELECT COUNT(a) FROM Account a WHERE a.role.id = 1" )
+    long countUser();
+
+    @Query("SELECT COUNT(a) FROM Account a WHERE a.status != 'Đang hoạt động'" )
+    long countBanedUser();
 }

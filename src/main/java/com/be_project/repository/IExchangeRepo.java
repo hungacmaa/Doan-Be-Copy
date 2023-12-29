@@ -45,4 +45,6 @@ public interface IExchangeRepo extends JpaRepository<Exchange, Long> {
                     "WHERE a.id = :accountId " +
                     "AND e.status NOT IN ('Đã trao đổi', 'Đã hủy') AND e.id != 0")
     void removeAllByAccountId(@Param("accountId") long accountId);
+
+    long countByStatus(String status);
 }

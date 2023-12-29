@@ -56,4 +56,9 @@ public interface IPostRepo extends JpaRepository<Post, Long> {
     Boolean deleteById(long postId);
 
     List<Post> findAllByCategoryProduct(CategoryProduct categoryProduct);
+
+    @Query("SELECT COUNT(p) FROM Post p WHERE p.status = :postStatus")
+    Long countByStatus(@Param("postStatus") String postStatus);
+
+    long countByCategoryProduct(CategoryProduct categoryProduct);
 }
