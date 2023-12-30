@@ -81,7 +81,7 @@ public class CensorService implements ICensorService {
                                     || objectName.equals("short")
                                     || objectName.equals("skirt")
                                     || objectName.equals("sweater"))
-                                    && conf >= 0.75) {
+                                    && conf >= 0.25) {
                                 // tăng số lượng ảnh thỏa mãn
                                 numValidImage++;
                                 break;
@@ -101,7 +101,7 @@ public class CensorService implements ICensorService {
                         censorRepo.save(censor);
                         postRepo.save(post);
 
-                    } else if (numValidImage <= 0.3 * numImage) {
+                    } else if (numValidImage <= 0.2 * numImage) {
                         censor.setStatus("Đã kiểm duyệt");
                         censor.setResult("Khóa");
                         censor.setReason("Quá nhiều ảnh không hợp lệ");
