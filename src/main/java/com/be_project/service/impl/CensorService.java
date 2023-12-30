@@ -50,76 +50,82 @@ public class CensorService implements ICensorService {
                 .createdAt(post.getCreatedAt())
                 .status("Chờ kiểm duyệt")
                 .build();
-        censorRepo.save(censor);
+        censor = censorRepo.save(censor);
+        post = postRepo.findById(post.getId()).get();
         String categoryProduct = post.getCategoryProduct().getName();
-        if(categoryProduct.contains("Quần") || categoryProduct.contains("Áo"));
-        // lấy list images
-        try {
-            // call api
-            PredictResponse predictResponse = webClientBuilder.build()
-                    .post()
-                    .uri("http://localhost:5000/predict")
-                    .body(Mono.just(listURLDto), ListURLDto.class)
-                    .retrieve()
-                    .bodyToMono(PredictResponse.class)
-                    .block();
+        try{
+            if (categoryProduct.contains("Quần") || categoryProduct.contains("Áo")) {
+                // lấy list images
+                try {
+                    // call api
+                    PredictResponse predictResponse = webClientBuilder.build()
+                            .post()
+                            .uri("http://localhost:5000/predict")
+                            .body(Mono.just(listURLDto), ListURLDto.class)
+                            .retrieve()
+                            .bodyToMono(PredictResponse.class)
+                            .block();
 
-            // Xử lý
-            int numValidImage = 0;
-            for (Predict predict : predictResponse.getData()) {
-                for (Detection detection : predict.getBoxes()) {
-                    String objectName = detection.getName();
-                    float conf = detection.getConfidence();
-                    // Nếu tồn tại một đối tượng thỏa mãn thì dừng xét các đối tượng khác
-                    if ((objectName.equals("Tshirt")
-                            || objectName.equals("dress")
-                            || objectName.equals("jacket")
-                            || objectName.equals("pants")
-                            || objectName.equals("shirt")
-                            || objectName.equals("short")
-                            || objectName.equals("skirt")
-                            || objectName.equals("sweater"))
-                            && conf >= 0.75){
-                        // tăng số lượng ảnh thỏa mãn
-                        numValidImage++;
-                        break;
+                    // Xử lý
+                    int numValidImage = 0;
+                    for (Predict predict : predictResponse.getData()) {
+                        for (Detection detection : predict.getBoxes()) {
+                            String objectName = detection.getName();
+                            float conf = detection.getConfidence();
+                            // Nếu tồn tại một đối tượng thỏa mãn thì dừng xét các đối tượng khác
+                            if ((objectName.equals("Tshirt")
+                                    || objectName.equals("dress")
+                                    || objectName.equals("jacket")
+                                    || objectName.equals("pants")
+                                    || objectName.equals("shirt")
+                                    || objectName.equals("short")
+                                    || objectName.equals("skirt")
+                                    || objectName.equals("sweater"))
+                                    && conf >= 0.75) {
+                                // tăng số lượng ảnh thỏa mãn
+                                numValidImage++;
+                                break;
+                            }
+                        }
                     }
+                    // kết luận
+                    int numImage = listURLDto.getImg_urls().size();
+                    if (numValidImage >= 0.65 * numImage) {
+                        censor.setStatus("Đã kiểm duyệt");
+                        censor.setResult("Duyệt");
+                        censor.setReason("Thỏa mãn");
+                        censor.setReviewer(accountRepo.findByUsername("predictsystem"));
+                        censor.setModifiedAt(LocalDate.now());
+
+                        post.setStatus("Chưa trao đổi");
+                        censorRepo.save(censor);
+                        postRepo.save(post);
+
+                    } else if (numValidImage <= 0.3 * numImage) {
+                        censor.setStatus("Đã kiểm duyệt");
+                        censor.setResult("Khóa");
+                        censor.setReason("Quá nhiều ảnh không hợp lệ");
+                        censor.setReviewer(accountRepo.findByUsername("predictsystem"));
+                        censor.setModifiedAt(LocalDate.now());
+
+                        post.setStatus("Khóa");
+                        censorRepo.save(censor);
+                        postRepo.save(post);
+
+                    } else {
+                        censorRepo.save(censor);
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
-            // kết luận
-            int numImage = listURLDto.getImg_urls().size();
-            if(numValidImage >= 0.65*numImage){
-                censor.setStatus("Đã kiểm duyệt");
-                censor.setResult("Duyệt");
-                censor.setReason("Thỏa mãn");
-                censor.setReviewer(accountRepo.findByUsername("predictsystem"));
-                censor.setModifiedAt(LocalDate.now());
-
-                post.setStatus("Chưa trao đổi");
-                censorRepo.save(censor);
-                postRepo.save(post);
-
-            } else if (numValidImage <= 0.3*numImage) {
-                censor.setStatus("Đã kiểm duyệt");
-                censor.setResult("Khóa");
-                censor.setReason("Quá nhiều ảnh không hợp lệ");
-                censor.setReviewer(accountRepo.findByUsername("predictsystem"));
-                censor.setModifiedAt(LocalDate.now());
-
-                post.setStatus("Khóa");
-                censorRepo.save(censor);
-                postRepo.save(post);
-
-            }
-            else {
-                censorRepo.save(censor);
-            }
-
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+
 
     }
 
@@ -127,7 +133,7 @@ public class CensorService implements ICensorService {
     public Censor editCensor(CensorDto censorDto, long censorId) {
         // lấy censor theo id truyền vào từ db
         Optional<Censor> optionalCensor = censorRepo.findById(censorId);
-        if(optionalCensor.isPresent()){
+        if (optionalCensor.isPresent()) {
             Censor censor = optionalCensor.get();
             // sửa thông tin censor đó theo censorDto
 
@@ -136,9 +142,7 @@ public class CensorService implements ICensorService {
             // lưu lần censor đó và lưu bài đăng đó với trạng thái mới
 
             return null;
-        }
-
-        else return null;
+        } else return null;
     }
 
     @Override
@@ -149,9 +153,9 @@ public class CensorService implements ICensorService {
     @Override
     public Censor acceptCensor(long censorId, CensorDto censorDto) {
         Optional<Censor> data = censorRepo.findById(censorId);
-        if(data.isPresent()){
+        if (data.isPresent()) {
             Censor censor = data.get();
-            if(censor.getStatus().equals("Chờ kiểm duyệt")){
+            if (censor.getStatus().equals("Chờ kiểm duyệt")) {
                 censor.setReason("Thỏa mãn");
                 censor.setResult("Duyệt");
                 censor.setStatus("Đã kiểm duyệt");
@@ -166,8 +170,7 @@ public class CensorService implements ICensorService {
                 censor = censorRepo.save(censor);
 
                 return censor;
-            }
-            else{
+            } else {
                 return censor;
             }
         }
@@ -177,9 +180,9 @@ public class CensorService implements ICensorService {
     @Override
     public Censor rejectCensor(long censorId, CensorDto censorDto) {
         Optional<Censor> data = censorRepo.findById(censorId);
-        if(data.isPresent()){
+        if (data.isPresent()) {
             Censor censor = data.get();
-            if(censor.getStatus().equals("Chờ kiểm duyệt")){
+            if (censor.getStatus().equals("Chờ kiểm duyệt")) {
                 censor.setReason(censorDto.getReason());
                 censor.setResult("Khóa");
                 censor.setStatus("Đã kiểm duyệt");
@@ -194,8 +197,7 @@ public class CensorService implements ICensorService {
                 censor = censorRepo.save(censor);
 
                 return censor;
-            }
-            else{
+            } else {
                 return censor;
             }
         }
